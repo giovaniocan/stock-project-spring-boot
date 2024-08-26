@@ -2,6 +2,7 @@ package click.gestao.api.domain.Transactions;
 
 import click.gestao.api.domain.produto.Produto;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,4 +30,10 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     private TypeTransaction type_transaction;
+
+    public Transaction(@Valid DadosCadastroTransaction dados, Produto produto) {
+        this.amount = dados.amount();
+        this.type_transaction = dados.type_transaction();
+        this.produto = produto;
+    }
 }

@@ -19,7 +19,7 @@ public class ProdutosController {
     private ProdutoService produtoService;
 
     @PostMapping
-    public ResponseEntity<DadosDetalhamentoProduto> ResponseEntity(@RequestBody @Valid DadosCadastroProduto dados, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<DadosDetalhamentoProduto> createProduto(@RequestBody @Valid DadosCadastroProduto dados, UriComponentsBuilder uriBuilder) {
         var produto = produtoService.createProduct(dados);
 
         var uri = uriBuilder.path("/produtos/{id}").buildAndExpand(produto.id()).toUri();

@@ -38,7 +38,6 @@ public class ProdutoService {
         produto.atualizarInfo(dados);
 
         return new DadosDetalhamentoProduto(produto);
-
     }
 
     @Transactional
