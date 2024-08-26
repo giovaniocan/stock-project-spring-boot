@@ -54,4 +54,12 @@ public class Produto {
     public void excluir() {
         this.ativo = false;
     }
+
+    public void atualizarEstoque(Boolean isEntrada, Integer quantidade) {
+        if(isEntrada) {
+            this.quant_estoque += quantidade;
+        } else {
+            this.quant_estoque -= quantidade;
+        }
+    }
 }

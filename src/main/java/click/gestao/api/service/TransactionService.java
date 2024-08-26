@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 public class TransactionService {
 
     @Autowired
+    ProdutoService productService;
+
+    @Autowired
     private TransactionRepository transactionRepository;
 
     @Autowired
@@ -31,13 +34,13 @@ public class TransactionService {
             throw new ValidacaoException("Produto com id " + dados.product_id() + " não está ativo");
         }
 
-        if(dados.type_transaction() == TypeTransaction.SAIDA && product.getQuant_estoque() < dados.amount()){
-            throw new ValidacaoException("Quantidade em estoque insuficiente");
-        }
+        productService.validateStock(dados.type_transaction(), product, dados.amount());
 
         var transaction = new Transaction(dados, product);
 
         var newTransaction = transactionRepository.save(transaction);
+
+        productService.makeTransctionInStock(product.getId(), dados.amount(), dados.type_transaction());
 
         var detalhamento = new DadosDetalhamentoTransaction(newTransaction);
 

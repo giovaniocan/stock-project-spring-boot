@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record DadosCadastroTransaction(
-        
+
         @NotNull(message = "O id do produto é obrigatório")
         Long product_id,
 

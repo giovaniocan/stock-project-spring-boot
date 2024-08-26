@@ -1,5 +1,7 @@
 package click.gestao.api.service;
 
+import click.gestao.api.domain.Transactions.TypeTransaction;
+import click.gestao.api.domain.ValidacaoException;
 import click.gestao.api.domain.produto.*;
 import click.gestao.api.repository.ProdutoRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -51,5 +53,21 @@ public class ProdutoService {
 
 
         return new DadosDetalhamentoProduto(product);
+    }
+
+    public void validateStock(TypeTransaction typeTransaction, Produto product, Integer amount) {
+        if(typeTransaction == TypeTransaction.SAIDA && product.getQuant_estoque() < amount){
+            throw new ValidacaoException("Quantidade em estoque insuficiente");
+        }
+    }
+
+    public void makeTransctionInStock(Long product_id, Integer amount, TypeTransaction typeTransaction) {
+        var product = repository.getReferenceById(product_id);
+
+        if(typeTransaction == TypeTransaction.ENTRADA){
+            product.atualizarEstoque (true, amount);
+        } else {
+            product.atualizarEstoque(false, amount);
+        }
     }
 }
