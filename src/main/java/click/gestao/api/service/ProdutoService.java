@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,7 +58,7 @@ public class ProdutoService {
 
     public void validateStock(TypeTransaction typeTransaction, Produto product, Integer amount) {
         if(typeTransaction == TypeTransaction.SAIDA && product.getQuant_estoque() < amount){
-            throw new ValidacaoException("Quantidade em estoque insuficiente");
+            throw new HttpMessageNotReadableException("Quantidade em estoque insuficiente");
         }
     }
 

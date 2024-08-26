@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +32,7 @@ public class TransactionService {
         var product = produtoRepository.findById(dados.product_id()).orElseThrow(() -> new EntityNotFoundException("Produto com id " + dados.product_id() + " não encontrado"));
 
         if(!product.getAtivo()){
-            throw new ValidacaoException("Produto com id " + dados.product_id() + " não está ativo");
+            throw new HttpMessageNotReadableException("Produto com id " + dados.product_id() + " não está ativo");
         }
 
         productService.validateStock(dados.type_transaction(), product, dados.amount());
