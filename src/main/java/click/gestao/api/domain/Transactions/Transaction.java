@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Table(name = "transactions")
 @Entity(name = "Transaction")
 @Getter
@@ -31,9 +33,12 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TypeTransaction type_transaction;
 
+    private LocalDateTime date;
+
     public Transaction(@Valid DadosCadastroTransaction dados, Produto produto) {
         this.amount = dados.amount();
         this.type_transaction = dados.type_transaction();
         this.produto = produto;
+        this.date = dados.date();
     }
 }

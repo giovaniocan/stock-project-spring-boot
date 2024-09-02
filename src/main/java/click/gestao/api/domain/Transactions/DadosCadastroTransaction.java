@@ -3,6 +3,8 @@ package click.gestao.api.domain.Transactions;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
+import java.time.LocalDateTime;
+
 public record DadosCadastroTransaction(
 
         @NotNull(message = "O id do produto é obrigatório")
@@ -13,5 +15,8 @@ public record DadosCadastroTransaction(
         Integer amount,
 
         @NotNull(message = "Tipo de transação é obrigatório")
-        TypeTransaction type_transaction
+        TypeTransaction type_transaction,
+
+        @NotNull(message = "Data é obrigatória")
+        LocalDateTime date
 ) {}

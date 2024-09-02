@@ -1,9 +1,6 @@
 package click.gestao.api.service;
 
-import click.gestao.api.domain.Transactions.DadosCadastroTransaction;
-import click.gestao.api.domain.Transactions.DadosDetalhamentoTransaction;
-import click.gestao.api.domain.Transactions.Transaction;
-import click.gestao.api.domain.Transactions.TypeTransaction;
+import click.gestao.api.domain.Transactions.*;
 import click.gestao.api.domain.ValidacaoException;
 import click.gestao.api.repository.ProdutoRepository;
 import click.gestao.api.repository.TransactionRepository;
@@ -11,6 +8,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
@@ -47,4 +46,9 @@ public class TransactionService {
 
         return detalhamento;
     }
+
+    public Page<DadosListagemTransaction> list(Pageable paginacao) {
+        return transactionRepository.findAll(paginacao).map(DadosListagemTransaction::new);
+    }
+
 }
