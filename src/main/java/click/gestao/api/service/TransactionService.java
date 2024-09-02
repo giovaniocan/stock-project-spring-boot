@@ -51,4 +51,13 @@ public class TransactionService {
         return transactionRepository.findAll(paginacao).map(DadosListagemTransaction::new);
     }
 
+    public void deleteTransaction(Long id) {
+        var transaction = transactionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Transação com id " + id + " não encontrada"));
+
+        var newType = transaction.getType_transaction() == TypeTransaction.SAIDA ? TypeTransaction.ENTRADA : TypeTransaction.SAIDA;
+
+        productService.makeTransctionInStock(transaction.getProduto().getId(), transaction.getAmount(), newType);
+
+        transactionRepository.deleteById(id);
+    }
 }
