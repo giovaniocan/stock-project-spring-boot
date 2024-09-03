@@ -68,8 +68,6 @@ public class TransactionService {
         var product = produtoRepository.getReferenceById(dados.product_id());
         transaction.updateInfo(dados, product);
 
-
-
         System.out.println("nova transacao" + transaction);
 
         return new DadosDetalhamentoTransaction(transaction);
