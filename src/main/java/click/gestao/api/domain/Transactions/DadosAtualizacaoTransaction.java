@@ -25,4 +25,8 @@ public record DadosAtualizacaoTransaction(
     public DadosAtualizacaoTransaction(Transaction transaction) {
         this(transaction.getId(), transaction.getAmount(), transaction.getType_transaction(), transaction.getDate(), transaction.getProduto().getId());
     }
+
+    public DadosAtualizacaoTransaction( Long id) {
+        this(id, null, null, null, null);
+    }
 }

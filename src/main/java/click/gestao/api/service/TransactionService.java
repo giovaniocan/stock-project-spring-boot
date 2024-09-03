@@ -2,6 +2,7 @@ package click.gestao.api.service;
 
 import click.gestao.api.domain.Transactions.*;
 import click.gestao.api.domain.ValidacaoException;
+import click.gestao.api.domain.produto.DadosAtualizacaoProduto;
 import click.gestao.api.repository.ProdutoRepository;
 import click.gestao.api.repository.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -66,9 +67,29 @@ public class TransactionService {
     public DadosDetalhamentoTransaction update(DadosAtualizacaoTransaction dados) {
         var transaction = transactionRepository.getReferenceById(dados.id());
         var product = produtoRepository.getReferenceById(dados.product_id());
+        var newTransaction = new DadosAtualizacaoTransaction(dados.id());
+
+        if(!product.getAtivo()){
+            throw new HttpMessageNotReadableException("Produto com id " + dados.product_id() + " não está ativo");
+        }
+
+        // para pegar os valores da antiga transacao
+        TypeTransaction previusType = transaction.getType_transaction();
+        Integer previusAmount = transaction.getAmount();
+
+
+        //revertendo o estoque antes da transacao.
+        if(previusType == TypeTransaction.SAIDA){
+            productService.makeTransctionInStock(product.getId(), previusAmount, TypeTransaction.ENTRADA);
+        }else if(previusType == TypeTransaction.ENTRADA){
+            productService.makeTransctionInStock(product.getId(), previusAmount, TypeTransaction.SAIDA);
+        }
+
+        productService.validateStock(dados.type_transaction(), product, dados.amount());
+
         transaction.updateInfo(dados, product);
 
-        System.out.println("nova transacao" + transaction);
+        productService.makeTransctionInStock(product.getId(), dados.amount(), dados.type_transaction());
 
         return new DadosDetalhamentoTransaction(transaction);
     }
