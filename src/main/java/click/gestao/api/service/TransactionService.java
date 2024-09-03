@@ -1,13 +1,10 @@
 package click.gestao.api.service;
 
 import click.gestao.api.domain.Transactions.*;
-import click.gestao.api.domain.ValidacaoException;
-import click.gestao.api.domain.produto.DadosAtualizacaoProduto;
 import click.gestao.api.repository.ProdutoRepository;
 import click.gestao.api.repository.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,8 +45,12 @@ public class TransactionService {
         return detalhamento;
     }
 
-    public Page<DadosListagemTransaction> list(Pageable paginacao) {
-        return transactionRepository.findAll(paginacao).map(DadosListagemTransaction::new);
+    public Page<DadosListagemTransaction> list(Pageable paginacao, TypeTransaction type_transaction) {
+        if(type_transaction != null){
+            return transactionRepository.findByTypeTransaction(type_transaction, paginacao).map(DadosListagemTransaction::new);
+        }else{
+            return transactionRepository.findAll(paginacao).map(DadosListagemTransaction::new);
+        }
     }
 
     @Transactional
@@ -90,6 +91,12 @@ public class TransactionService {
         transaction.updateInfo(dados, product);
 
         productService.makeTransctionInStock(product.getId(), dados.amount(), dados.type_transaction());
+
+        return new DadosDetalhamentoTransaction(transaction);
+    }
+
+    public DadosDetalhamentoTransaction detailTransaction(Long id) {
+        var transaction = transactionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Transação com id " + id + " não encontrada"));
 
         return new DadosDetalhamentoTransaction(transaction);
     }

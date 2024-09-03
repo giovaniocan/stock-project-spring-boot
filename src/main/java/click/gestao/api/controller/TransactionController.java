@@ -1,9 +1,6 @@
 package click.gestao.api.controller;
 
-import click.gestao.api.domain.Transactions.DadosAtualizacaoTransaction;
-import click.gestao.api.domain.Transactions.DadosCadastroTransaction;
-import click.gestao.api.domain.Transactions.DadosDetalhamentoTransaction;
-import click.gestao.api.domain.Transactions.DadosListagemTransaction;
+import click.gestao.api.domain.Transactions.*;
 import click.gestao.api.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -32,8 +29,10 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemTransaction>> listTransactions(@PageableDefault(size = 25, sort = {"date"},direction = Sort.Direction.DESC) Pageable paginacao) {
-        var page = transactionService.list(paginacao);
+    public ResponseEntity<Page<DadosListagemTransaction>> listTransactions(
+            @PageableDefault(size = 25, sort = {"date"},direction = Sort.Direction.DESC) Pageable paginacao,
+            @RequestParam(value = "type_transaction", required = false)TypeTransaction typeTransaction) {
+        var page = transactionService.list(paginacao, typeTransaction);
 
         return ResponseEntity.ok(page);
     }
@@ -50,6 +49,13 @@ public class TransactionController {
         transactionService.deleteTransaction(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity GetOneTransaction(@PathVariable Long id){
+        var transaction = transactionService.detailTransaction(id);
+
+        return ResponseEntity.ok(transaction);
     }
 
 }
