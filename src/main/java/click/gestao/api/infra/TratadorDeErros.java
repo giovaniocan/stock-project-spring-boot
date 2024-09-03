@@ -1,5 +1,6 @@
 package click.gestao.api.infra;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -25,11 +26,16 @@ public class TratadorDeErros {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity tratarErro400(HttpMessageNotReadableException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<?> tratarErro400(HttpMessageNotReadableException ex) {
+        Throwable mostSpecificCause = ex.getMostSpecificCause();
+        if (mostSpecificCause instanceof InvalidFormatException) {
+            InvalidFormatException invalidFormatException = (InvalidFormatException) mostSpecificCause;
+            if (invalidFormatException.getTargetType().isEnum()) {
+                return ResponseEntity.badRequest().body("Valor inválido para o campo 'tipo de transação'. Valores permitidos: SAIDA, ENTRADA.");
+            }
+        }
+        return ResponseEntity.badRequest().body("Requisição mal formatada: " + ex.getMessage());
     }
-
-
 
     private record DadosErroValidacao(String campo, String mensagem) {
         public DadosErroValidacao(FieldError erro) {

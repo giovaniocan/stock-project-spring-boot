@@ -1,5 +1,6 @@
 package click.gestao.api.controller;
 
+import click.gestao.api.domain.Transactions.DadosAtualizacaoTransaction;
 import click.gestao.api.domain.Transactions.DadosCadastroTransaction;
 import click.gestao.api.domain.Transactions.DadosDetalhamentoTransaction;
 import click.gestao.api.domain.Transactions.DadosListagemTransaction;
@@ -35,6 +36,13 @@ public class TransactionController {
         var page = transactionService.list(paginacao);
 
         return ResponseEntity.ok(page);
+    }
+
+    @PutMapping
+    public ResponseEntity update(@RequestBody @Valid DadosAtualizacaoTransaction dados){
+        var transactionUpdated = transactionService.update(dados);
+
+        return ResponseEntity.ok(transactionUpdated);
     }
 
     @DeleteMapping("/{id}")

@@ -41,4 +41,19 @@ public class Transaction {
         this.produto = produto;
         this.date = dados.date();
     }
+
+    public void updateInfo(DadosAtualizacaoTransaction dados, Produto product){
+        if(dados.amount() != null) {
+            this.amount = dados.amount();
+        }
+        if(dados.type_transaction() != null) {
+            this.type_transaction = dados.type_transaction();
+        }
+        if(dados.date() != null) {
+            this.date = dados.date();
+        }
+        if(dados.product_id() != null) {
+            this.produto = product;
+        }
+    }
 }
