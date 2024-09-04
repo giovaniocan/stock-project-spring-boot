@@ -4,6 +4,7 @@ import click.gestao.api.domain.user.Usuario;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -14,11 +15,14 @@ import java.util.Date;
 @Service
 public class TokenService {
 
+    @Value("${api.security.token.secret}")
+    private String secret;
+
     public String gerarToken(Usuario usuario){
         try {
             //esse algoritmo é o que vai ser usado para criptografar o token, e esse secret é uma chave que a gente passa para garantir que o token é valido
 
-            var algorithm = Algorithm.HMAC256("12345678");
+            var algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("API de teste da Click")
                     // aqui serve para guardar as informacoes do usuario no token, no caso só estamos guardando quem é o usuario
