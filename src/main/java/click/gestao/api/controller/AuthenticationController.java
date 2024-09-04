@@ -2,6 +2,7 @@ package click.gestao.api.controller;
 
 import click.gestao.api.domain.user.DadosAuthentication;
 import click.gestao.api.domain.user.Usuario;
+import click.gestao.api.infra.security.DadosTokenJWT;
 import click.gestao.api.infra.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,12 @@ public class AuthenticationController {
 
     @PostMapping
     public ResponseEntity login(@RequestBody @Valid DadosAuthentication data){
-        var token = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
-        var authentication = manager.authenticate(token);
+        var Authenticationtoken = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
+        var authentication = manager.authenticate(Authenticationtoken);
 
-        return ResponseEntity.ok(tokenService.gerarToken((Usuario) authentication.getPrincipal()));
+        var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+
+        return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
     }
 
 }
