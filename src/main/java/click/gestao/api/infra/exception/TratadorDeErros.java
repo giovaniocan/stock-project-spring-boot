@@ -1,4 +1,4 @@
-package click.gestao.api.infra;
+package click.gestao.api.infra.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.persistence.EntityNotFoundException;
