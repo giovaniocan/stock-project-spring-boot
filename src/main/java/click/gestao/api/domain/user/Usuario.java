@@ -28,10 +28,20 @@ public class Usuario implements UserDetails {
 
     private String senha;
 
+    @Enumerated(EnumType.STRING)
+    private UsuarioRole role;
+
+
+
     //isso aqui é para ter mais de um perfil, mas como nao vamos usar, vamos deixar assim mesmo
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.role.equals(UsuarioRole.admin)) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        }
     }
 
 
